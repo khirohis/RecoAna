@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">RecoAna</string>
+
+    // generic text
+    <string name="start_recording">録音開始</string>
+    <string name="stop_recording">録音停止</string>
+    <string name="analyze">解析</string>
+    <string name="settings">設定</string>
+
 </resources>

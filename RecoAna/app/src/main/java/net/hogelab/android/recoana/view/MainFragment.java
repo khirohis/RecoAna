@@ -44,6 +44,10 @@ public class MainFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         binding.setLifecycleOwner(this);
 
+        binding.recordingControlButton.setOnClickListener(this::onRecordingControl);
+        binding.analyzeButton.setOnClickListener(this::onAnalyze);
+        binding.settingsButton.setOnClickListener(this::onSettings);
+
         return binding.getRoot();
     }
 
@@ -73,5 +77,17 @@ public class MainFragment extends Fragment {
         super.onDestroy();
 
         Log.v(TAG, "onDestroy");
+    }
+
+
+    // UI action handlers
+
+    private void onRecordingControl(View view) {
+    }
+
+    private void onAnalyze(View view) {
+    }
+
+    private void onSettings(View view) {
     }
 }
