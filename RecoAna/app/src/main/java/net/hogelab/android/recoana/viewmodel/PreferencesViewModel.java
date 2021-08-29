@@ -4,10 +4,10 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-public class MainViewModel extends AndroidViewModel {
-    private static final String TAG = MainViewModel.class.getSimpleName();
+public class PreferencesViewModel extends AndroidViewModel {
+    private static final String TAG = PreferencesViewModel.class.getSimpleName();
 
-    public MainViewModel(Application application) {
+    public PreferencesViewModel(Application application) {
         super(application);
     }
 

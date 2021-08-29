@@ -35,13 +35,13 @@
             />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/settings_button"
+            android:id="@+id/preferences_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/settings"
+            android:text="@string/preferences"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

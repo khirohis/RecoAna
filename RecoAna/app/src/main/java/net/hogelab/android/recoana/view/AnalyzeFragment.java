@@ -1,6 +1,5 @@
 package net.hogelab.android.recoana.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,23 +12,20 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import net.hogelab.android.recoana.AnalyzeActivity;
-import net.hogelab.android.recoana.PreferencesActivity;
 import net.hogelab.android.recoana.R;
-import net.hogelab.android.recoana.RecordingActivity;
-import net.hogelab.android.recoana.databinding.FragmentMainBinding;
-import net.hogelab.android.recoana.viewmodel.MainViewModel;
+import net.hogelab.android.recoana.databinding.FragmentAnalyzeBinding;
+import net.hogelab.android.recoana.viewmodel.AnalyzeViewModel;
 
-public class MainFragment extends Fragment {
-    private static final String TAG = MainFragment.class.getSimpleName();
+public class AnalyzeFragment extends Fragment {
+    private static final String TAG = AnalyzeFragment.class.getSimpleName();
 
-    private FragmentMainBinding binding;
-    private MainViewModel viewModel;
+    private FragmentAnalyzeBinding binding;
+    private AnalyzeViewModel viewModel;
 
     public static Fragment newInstance() {
         Log.v(TAG, "newInstance");
 
-        return new MainFragment();
+        return new AnalyzeFragment();
     }
 
     @Override
@@ -38,19 +34,15 @@ public class MainFragment extends Fragment {
 
         Log.v(TAG, "onCreate");
 
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AnalyzeViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView");
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_analyze, container, false);
         binding.setLifecycleOwner(this);
-
-        binding.recordingControlButton.setOnClickListener(this::onRecordingControl);
-        binding.analyzeButton.setOnClickListener(this::onAnalyze);
-        binding.preferencesButton.setOnClickListener(this::onPreferences);
 
         return binding.getRoot();
     }
@@ -87,17 +79,11 @@ public class MainFragment extends Fragment {
     // UI action handlers
 
     private void onRecordingControl(View view) {
-        Intent intent = RecordingActivity.newIntent(requireContext());
-        startActivity(intent);
     }
 
     private void onAnalyze(View view) {
-        Intent intent = AnalyzeActivity.newIntent(requireContext());
-        startActivity(intent);
     }
 
     private void onPreferences(View view) {
-        Intent intent = PreferencesActivity.newIntent(requireContext());
-        startActivity(intent);
     }
 }

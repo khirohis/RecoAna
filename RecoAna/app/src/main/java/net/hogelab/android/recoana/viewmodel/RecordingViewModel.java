@@ -4,10 +4,10 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-public class MainViewModel extends AndroidViewModel {
-    private static final String TAG = MainViewModel.class.getSimpleName();
+public class RecordingViewModel extends AndroidViewModel {
+    private static final String TAG = RecordingViewModel.class.getSimpleName();
 
-    public MainViewModel(Application application) {
+    public RecordingViewModel(Application application) {
         super(application);
     }
 
