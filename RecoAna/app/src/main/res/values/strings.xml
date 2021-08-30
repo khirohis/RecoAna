@@ -2,9 +2,15 @@
     <string name="app_name">RecoAna</string>
 
     // generic text
-    <string name="start_recording">録音開始</string>
-    <string name="stop_recording">録音停止</string>
+    <string name="recording">録音</string>
     <string name="analyze">解析</string>
     <string name="preferences">設定</string>
+
+    <string name="close">閉じる</string>
+
+    // recording
+    <string name="recording_permission">録音の許可</string>
+    <string name="start_recording">録音開始</string>
+    <string name="stop_recording">録音停止</string>
 
 </resources>

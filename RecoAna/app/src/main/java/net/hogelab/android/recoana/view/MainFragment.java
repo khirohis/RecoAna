@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
         binding.setLifecycleOwner(this);
 
-        binding.recordingControlButton.setOnClickListener(this::onRecordingControl);
+        binding.recordingButton.setOnClickListener(this::onRecording);
         binding.analyzeButton.setOnClickListener(this::onAnalyze);
         binding.preferencesButton.setOnClickListener(this::onPreferences);
 
@@ -86,7 +86,7 @@ public class MainFragment extends Fragment {
 
     // UI action handlers
 
-    private void onRecordingControl(View view) {
+    private void onRecording(View view) {
         Intent intent = RecordingActivity.newIntent(requireContext());
         startActivity(intent);
     }
