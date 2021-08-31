@@ -1,5 +1,7 @@
 package net.hogelab.android.recoana.audio;
 
+import android.util.Log;
+
 import net.hogelab.android.recoana.AppExecutor;
 
 public class RecordingThread {
@@ -11,19 +13,17 @@ public class RecordingThread {
     }
 
 
-    private long recordingMillisec;
-    private AudioRecorder audioRecorder;
+    private volatile Callback callback;
 
+    private long recordingBufferCount;
     private long readCount;
 
-    private volatile Callback callback;
+    private AudioRecorder audioRecorder;
     private volatile boolean recording;
     private volatile boolean completed;
 
 
-    public RecordingThread(long recordingMillisec) {
-        this.recordingMillisec = recordingMillisec;
-        audioRecorder = new AudioRecorder();
+    public RecordingThread() {
     }
 
 
@@ -36,9 +36,11 @@ public class RecordingThread {
     }
 
 
-    public void start() {
-        readCount = recordingMillisec / RecordSetting.MILLISEC_PER_BUFFER;
+    public void start(long recordingMillisec) {
+        recordingBufferCount = recordingMillisec / RecordSetting.MILLISEC_PER_BUFFER;
+        readCount = 0;
 
+        audioRecorder = new AudioRecorder();
         recording = true;
         completed = false;
 
@@ -55,7 +57,7 @@ public class RecordingThread {
         audioRecorder.start();
 
         while (recording) {
-            if (readCount <= 0) {
+            if (readCount >= recordingBufferCount) {
                 completed = true;
                 break;
             }
@@ -63,13 +65,14 @@ public class RecordingThread {
             byte[] buffer = new byte[RecordSetting.BYTES_PER_BUFFER];
             int readSize = audioRecorder.read(buffer);
             if (readSize == buffer.length) {
-                readCount--;
+                readCount++;
 
                 AppExecutor.getMainExecutor().execute(() -> {
                     callbackOnBuffer(buffer);
                 });
             } else {
-                // error?
+                // TODO: error handling
+                Log.d(TAG, "AudioRecorder#read returned " + readSize);
                 break;
             }
         }

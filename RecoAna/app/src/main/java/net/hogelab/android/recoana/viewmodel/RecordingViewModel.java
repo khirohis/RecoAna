@@ -1,6 +1,7 @@
 package net.hogelab.android.recoana.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -8,7 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import net.hogelab.android.recoana.audio.RecordSetting;
 import net.hogelab.android.recoana.audio.RecordingThread;
-import net.hogelab.android.recoana.repository.RecordedFileRepository;
+import net.hogelab.android.recoana.repository.RecordedDataRepository;
+import net.hogelab.android.recoana.repository.datastore.DataStore;
 
 public class RecordingViewModel extends AndroidViewModel
         implements RecordingThread.Callback {
@@ -19,23 +21,26 @@ public class RecordingViewModel extends AndroidViewModel
         RECORDING,
         SUCCESS_STOP,
         INTERRUPTION_STOP,
-        FAILURE_STOP,
+        ERROR_STOP,
     }
 
 
-    private RecordedFileRepository recordedFileRepository;
+    private final MutableLiveData<RecordingStatus> recordingStatusData = new MutableLiveData<>(RecordingStatus.WAITING);
 
-    private MutableLiveData<RecordingStatus> recordingStatusData = new MutableLiveData<>(RecordingStatus.WAITING);
+    private final RecordedDataRepository recordedDataRepository;
 
-    private RecordingThread recordingThread;
+    private final DataStore recordingDataStore;
+    private final RecordingThread recordingThread;
 
 
     public RecordingViewModel(Application application) {
         super(application);
 
-        recordedFileRepository = new RecordedFileRepository();
+        recordedDataRepository = new RecordedDataRepository(application);
 
-        recordingThread = new RecordingThread(RecordSetting.DEFAULT_RECORDING_MILLISECONDS);
+        recordingDataStore = recordedDataRepository.getTemporaryDataStore();
+
+        recordingThread = new RecordingThread();
         recordingThread.setCallback(this);
     }
 
@@ -46,6 +51,13 @@ public class RecordingViewModel extends AndroidViewModel
 
     @Override
     public void onBuffer(byte[] buffer) {
+        Log.d(TAG, "onBuffer: buffer length=" + buffer.length);
+
+        if (!recordingDataStore.write(buffer)) {
+            Log.d(TAG, "onBuffer: recordingDataStore.write returned false.");
+
+            // TODO: error handling
+        }
     }
 
     @Override
@@ -55,6 +67,9 @@ public class RecordingViewModel extends AndroidViewModel
         } else {
             recordingStatusData.postValue(RecordingStatus.INTERRUPTION_STOP);
         }
+
+        recordingDataStore.close();
+        recordedDataRepository.commitTemporaryDataStore();
     }
 
 
@@ -64,7 +79,24 @@ public class RecordingViewModel extends AndroidViewModel
 
 
     public void startRecording() {
-        recordingThread.start();
+        if (!recordingDataStore.open()) {
+            Log.d(TAG, "startRecording: recordingDataStore.open returned false.");
+
+            // TODO: error handling
+
+            return;
+        }
+
+        if (!recordingDataStore.setLength(0)) {
+            Log.d(TAG, "startRecording: recordingDataStore.setLength returned false.");
+
+            // TODO: error handling
+
+            return;
+        }
+
+        recordingStatusData.postValue(RecordingStatus.RECORDING);
+        recordingThread.start(RecordSetting.DEFAULT_RECORDING_MILLISECONDS);
     }
 
     public void stopRecording() {

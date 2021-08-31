@@ -46,16 +46,11 @@ public class RecordingFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(RecordingViewModel.class);
         recordingStatusData = viewModel.getRecordingStatusData();
+        recordingStatusData.observe(this, this::onRecordingStatusChanged);
 
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
-                (isGranted) -> {
-                    if (isGranted) {
-                        recordingPermissionGranted();
-                    } else {
-                        recordingPermissionNotGranted();
-                    }
-                });
+                this::onRequestRecordingPermissionResult);
     }
 
     @Override
@@ -77,17 +72,7 @@ public class RecordingFragment extends Fragment {
 
         Log.v(TAG, "onResume");
 
-        boolean granted = isRecordingPermissionGranted();
-        if (granted) {
-            RecordingViewModel.RecordingStatus status = recordingStatusData.getValue();
-            if (status != null && status == RecordingViewModel.RecordingStatus.RECORDING) {
-                binding.recordingControlButton.setText(R.string.stop_recording);
-            } else {
-                binding.recordingControlButton.setText(R.string.start_recording);
-            }
-        } else {
-            binding.recordingControlButton.setText(R.string.recording_permission);
-        }
+        adjustRecodingControlButtonText();
     }
 
     @Override
@@ -133,13 +118,27 @@ public class RecordingFragment extends Fragment {
     }
 
 
+    private void onRecordingStatusChanged(RecordingViewModel.RecordingStatus status) {
+        adjustRecodingControlButtonText();
+
+        if (status != null) {
+            switch (status) {
+
+                case SUCCESS_STOP:
+                case INTERRUPTION_STOP:
+                    // TODO: 録音完了
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+
     // private functions
 
     private boolean isRecordingPermissionGranted() {
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//            return true;
-//        }
-
         int permissionResult = ContextCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.RECORD_AUDIO);
 
@@ -147,19 +146,42 @@ public class RecordingFragment extends Fragment {
     }
 
     private void requestRecordingPermission() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!isRecordingPermissionGranted()) {
-                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        if (!isRecordingPermissionGranted()) {
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        }
+    }
+
+    private void onRequestRecordingPermissionResult(boolean isGranted) {
+        adjustRecodingControlButtonText();
+    }
+
+
+    private void adjustRecodingControlButtonText() {
+        if (isRecordingPermissionGranted()) {
+            RecordingViewModel.RecordingStatus status = recordingStatusData.getValue();
+            if (status != null) {
+                switch (status) {
+
+                    case RECORDING:
+                        binding.recordingControlButton.setText(R.string.stop_recording);
+                        break;
+
+                    case WAITING:
+                    case SUCCESS_STOP:
+                    case INTERRUPTION_STOP:
+                    case ERROR_STOP:
+                        binding.recordingControlButton.setText(R.string.start_recording);
+                        break;
+
+                    default:
+                        binding.recordingControlButton.setText(R.string.start_recording);
+                        break;
+                }
+            } else {
+                binding.recordingControlButton.setText(R.string.start_recording);
             }
-//        }
-    }
-
-
-    private void recordingPermissionGranted() {
-        binding.recordingControlButton.setText(R.string.start_recording);
-    }
-
-    private void recordingPermissionNotGranted() {
-        binding.recordingControlButton.setText(R.string.recording_permission);
+        } else {
+            binding.recordingControlButton.setText(R.string.recording_permission);
+        }
     }
 }
