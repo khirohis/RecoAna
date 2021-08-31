@@ -72,7 +72,7 @@ public class RecordingFragment extends Fragment {
 
         Log.v(TAG, "onResume");
 
-        adjustRecodingControlButtonText();
+        adjustRecodingControlButton();
     }
 
     @Override
@@ -119,7 +119,7 @@ public class RecordingFragment extends Fragment {
 
 
     private void onRecordingStatusChanged(RecordingViewModel.RecordingStatus status) {
-        adjustRecodingControlButtonText();
+        adjustRecodingControlButton();
 
         if (status != null) {
             switch (status) {
@@ -152,11 +152,11 @@ public class RecordingFragment extends Fragment {
     }
 
     private void onRequestRecordingPermissionResult(boolean isGranted) {
-        adjustRecodingControlButtonText();
+        adjustRecodingControlButton();
     }
 
 
-    private void adjustRecodingControlButtonText() {
+    private void adjustRecodingControlButton() {
         if (isRecordingPermissionGranted()) {
             RecordingViewModel.RecordingStatus status = recordingStatusData.getValue();
             if (status != null) {

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import net.hogelab.android.recoana.AnalyzeActivity;
@@ -19,12 +20,16 @@ import net.hogelab.android.recoana.R;
 import net.hogelab.android.recoana.RecordingActivity;
 import net.hogelab.android.recoana.databinding.FragmentMainBinding;
 import net.hogelab.android.recoana.viewmodel.MainViewModel;
+import net.hogelab.android.recoana.viewmodel.RecordingViewModel;
 
 public class MainFragment extends Fragment {
     private static final String TAG = MainFragment.class.getSimpleName();
 
     private FragmentMainBinding binding;
     private MainViewModel viewModel;
+
+    private LiveData<MainViewModel.RecordedStatus> recordedStatusData;
+
 
     public static Fragment newInstance() {
         Log.v(TAG, "newInstance");
@@ -39,6 +44,8 @@ public class MainFragment extends Fragment {
         Log.v(TAG, "onCreate");
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        recordedStatusData = viewModel.getRecordedStatusData();
+        recordedStatusData.observe(this, this::onRecordedStatusChanged);
     }
 
     @Override
@@ -60,6 +67,10 @@ public class MainFragment extends Fragment {
         super.onResume();
 
         Log.v(TAG, "onResume");
+
+        adjustAnalyzeButton();
+
+        viewModel.updateModels();
     }
 
     @Override
@@ -99,5 +110,22 @@ public class MainFragment extends Fragment {
     private void onPreferences(View view) {
         Intent intent = PreferencesActivity.newIntent(requireContext());
         startActivity(intent);
+    }
+
+
+    private void onRecordedStatusChanged(MainViewModel.RecordedStatus recordedStatus) {
+        adjustAnalyzeButton();
+    }
+
+
+    private void adjustAnalyzeButton() {
+        MainViewModel.RecordedStatus recordedStatus = recordedStatusData.getValue();
+        if (recordedStatus != null) {
+            if (recordedStatus.equals(MainViewModel.RecordedStatus.RECORDED)) {
+                binding.analyzeButton.setEnabled(true);
+            } else {
+                binding.analyzeButton.setEnabled(false);
+            }
+        }
     }
 }
