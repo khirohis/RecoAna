@@ -47,7 +47,7 @@ public class PcmGraphView extends View {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        offscreenBitmap = Bitmap.createBitmap(480, 512, Bitmap.Config.ARGB_8888);
+        offscreenBitmap = Bitmap.createBitmap(480, 1024, Bitmap.Config.ARGB_8888);
         offscreenCanvas = new Canvas(offscreenBitmap);
         offscreenPaint = new Paint();
     }
@@ -59,11 +59,11 @@ public class PcmGraphView extends View {
         Paint paint = new Paint();
         paint.setFilterBitmap(true);
 
-        Rect destRect = new Rect(0, 0, 120, 512);
+        Rect destRect = new Rect(0, 0, 120, 1024);
         canvas.drawBitmap(offscreenBitmap, null, destRect, paint);
 
         paint.setColor(Color.RED);
-        canvas.drawLine(0, 0, 0, 512, paint);
+        canvas.drawLine(0, 0, 0, 1024, paint);
 
         String time;
         int dec = position % 10;
@@ -93,8 +93,8 @@ public class PcmGraphView extends View {
         int frames = pcmData.length / 2;
         ByteBuffer buffer = ByteBuffer.wrap(pcmData);
         for (int i = 0; i < frames; i++) {
-            int value = buffer.getShort() / 128;
-            offscreenCanvas.drawLine(i, 256, i, 256 - value, offscreenPaint);
+            int value = buffer.getShort() / 64;
+            offscreenCanvas.drawLine(i, 512, i, 512 - value, offscreenPaint);
         }
 
         postInvalidate();
