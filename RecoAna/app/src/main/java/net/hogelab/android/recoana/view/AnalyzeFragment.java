@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import net.hogelab.android.recoana.R;
 import net.hogelab.android.recoana.databinding.FragmentAnalyzeBinding;
+import net.hogelab.android.recoana.model.datastore.DataStore;
+import net.hogelab.android.recoana.model.entity.AudioTimelineList;
+import net.hogelab.android.recoana.view.audiotimeline.AudioTimelineListAdapter;
 import net.hogelab.android.recoana.viewmodel.AnalyzeViewModel;
 
 public class AnalyzeFragment extends Fragment {
@@ -21,6 +24,10 @@ public class AnalyzeFragment extends Fragment {
 
     private FragmentAnalyzeBinding binding;
     private AnalyzeViewModel viewModel;
+
+    private DataStore dataStore;
+    private AudioTimelineList list;
+    private AudioTimelineListAdapter adapter;
 
     public static Fragment newInstance() {
         Log.v(TAG, "newInstance");
@@ -35,6 +42,9 @@ public class AnalyzeFragment extends Fragment {
         Log.v(TAG, "onCreate");
 
         viewModel = new ViewModelProvider(this).get(AnalyzeViewModel.class);
+        dataStore = viewModel.getRecordedDataStore();
+        list = new AudioTimelineList(dataStore);
+        list.initialize();
     }
 
     @Override
@@ -43,6 +53,9 @@ public class AnalyzeFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_analyze, container, false);
         binding.setLifecycleOwner(this);
+
+        adapter = new AudioTimelineListAdapter(requireContext(), list);
+        binding.audioTimelineList.setAdapter(adapter);
 
         return binding.getRoot();
     }
@@ -73,6 +86,8 @@ public class AnalyzeFragment extends Fragment {
         super.onDestroy();
 
         Log.v(TAG, "onDestroy");
+
+        list.terminate();
     }
 
 

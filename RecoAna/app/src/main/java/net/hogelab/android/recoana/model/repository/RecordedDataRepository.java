@@ -1,12 +1,11 @@
-package net.hogelab.android.recoana.repository;
+package net.hogelab.android.recoana.model.repository;
 
 import android.content.Context;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
-import net.hogelab.android.recoana.repository.datastore.DataStore;
-import net.hogelab.android.recoana.repository.datastore.FileDataStore;
+import net.hogelab.android.recoana.model.datastore.DataStore;
+import net.hogelab.android.recoana.model.datastore.FileDataStore;
 
 import java.io.File;
 

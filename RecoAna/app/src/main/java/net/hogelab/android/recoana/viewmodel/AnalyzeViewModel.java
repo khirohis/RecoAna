@@ -4,8 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import net.hogelab.android.recoana.repository.RecordedDataRepository;
-import net.hogelab.android.recoana.repository.datastore.DataStore;
+import net.hogelab.android.recoana.model.repository.RecordedDataRepository;
+import net.hogelab.android.recoana.model.datastore.DataStore;
 
 public class AnalyzeViewModel extends AndroidViewModel {
     private static final String TAG = AnalyzeViewModel.class.getSimpleName();
@@ -25,5 +25,10 @@ public class AnalyzeViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
+    }
+
+
+    public DataStore getRecordedDataStore() {
+        return recordedDataStore;
     }
 }

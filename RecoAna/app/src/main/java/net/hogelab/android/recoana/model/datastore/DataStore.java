@@ -1,4 +1,4 @@
-package net.hogelab.android.recoana.repository.datastore;
+package net.hogelab.android.recoana.model.datastore;
 
 public interface DataStore {
     enum Mode {

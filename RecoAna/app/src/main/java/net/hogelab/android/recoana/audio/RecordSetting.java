@@ -4,7 +4,8 @@ import android.media.AudioFormat;
 import android.media.MediaRecorder;
 
 public class RecordSetting {
-    public static final int AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
+//    public static final int AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
+    public static final int AUDIO_SOURCE = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
     public static final int SAMPLING_RATE = 48000; // 48kHz
     public static final int AUDIO_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     public static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;

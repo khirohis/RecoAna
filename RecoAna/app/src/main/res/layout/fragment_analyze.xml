@@ -14,5 +14,14 @@
         android:padding="8dp"
         >
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/audio_timeline_list"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="480dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

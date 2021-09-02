@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import net.hogelab.android.recoana.repository.RecordedDataRepository;
+import net.hogelab.android.recoana.model.repository.RecordedDataRepository;
 
 public class MainViewModel extends AndroidViewModel {
     private static final String TAG = MainViewModel.class.getSimpleName();

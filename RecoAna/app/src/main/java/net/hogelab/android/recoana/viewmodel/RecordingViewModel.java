@@ -9,8 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import net.hogelab.android.recoana.audio.RecordSetting;
 import net.hogelab.android.recoana.audio.RecordingThread;
-import net.hogelab.android.recoana.repository.RecordedDataRepository;
-import net.hogelab.android.recoana.repository.datastore.DataStore;
+import net.hogelab.android.recoana.model.repository.RecordedDataRepository;
+import net.hogelab.android.recoana.model.datastore.DataStore;
 
 public class RecordingViewModel extends AndroidViewModel
         implements RecordingThread.Callback {
