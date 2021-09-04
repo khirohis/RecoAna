@@ -14,7 +14,7 @@ public class DataBindingViewHolder extends RecyclerView.ViewHolder {
     public DataBindingViewHolder(@NonNull ViewDataBinding binding) {
         super(binding.getRoot());
 
-        Log.d(TAG, "constructor:");
+        Log.v(TAG, "constructor:");
 
         this.binding = binding;
     }

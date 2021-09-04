@@ -1,6 +1,7 @@
 package net.hogelab.android.recoana.view.audiotimeline;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -31,6 +32,8 @@ public class AudioTimelineListAdapter extends RecyclerView.Adapter<DataBindingVi
     @NonNull
     @Override
     public DataBindingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.v(TAG, "onCreateViewHolder");
+
         ViewDataBinding binding = getBinding(parent, viewType);
 
         return new DataBindingViewHolder(binding);

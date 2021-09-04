@@ -5,9 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -19,9 +19,7 @@ import java.nio.ByteBuffer;
 public class PcmGraphView extends View {
     private static final String TAG = PcmGraphView.class.getSimpleName();
 
-    private Canvas offscreenCanvas;
-    private Bitmap offscreenBitmap;
-    private Paint offscreenPaint;
+    private OffscreenCanvas offscreenCanvas;
 
     private int position;
     private byte[] pcmData;
@@ -47,35 +45,80 @@ public class PcmGraphView extends View {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        offscreenBitmap = Bitmap.createBitmap(480, 1024, Bitmap.Config.ARGB_8888);
-        offscreenCanvas = new Canvas(offscreenBitmap);
-        offscreenPaint = new Paint();
+        Log.v(TAG, "onFinishInflate");
+
+        // initialize
+        offscreenCanvas = new OffscreenCanvas(480, 1024, Bitmap.Config.ARGB_8888);
     }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        Log.v(TAG, "onAttachedToWindow");
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        Log.v(TAG, "onMeasure(" + widthMeasureSpec + ", " + heightMeasureSpec + ")");
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        Log.v(TAG, "onLayout(" + changed + ", " + left + ", " + top + ", " + right + ", " + bottom + ")");
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        Log.v(TAG, "onDetachedFromWindow");
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        Log.v(TAG, "onDraw");
+
         Paint paint = new Paint();
         paint.setFilterBitmap(true);
 
-        Rect destRect = new Rect(0, 0, 120, 1024);
-        canvas.drawBitmap(offscreenBitmap, null, destRect, paint);
+        int width = getWidth();
+        int height = getHeight();
+        Rect destRect = new Rect(0, 0, width, height);
+        canvas.drawBitmap(offscreenCanvas.getBitmap(), null, destRect, paint);
 
-        paint.setColor(Color.RED);
-        canvas.drawLine(0, 0, 0, 1024, paint);
+        float strokeWidth;
+        String timeText = null;
 
-        String time;
         int dec = position % 10;
         if (dec == 0) {
-            time = position + "0ms";
+            if (dec % 10 == 0) {
+                strokeWidth = 4.0f;
+            } else {
+                strokeWidth = 2.0f;
+            }
+            timeText = position + "0ms";
         } else {
-            time = "+" + dec + "0";
+            strokeWidth = 1.0f;
+//            timeText = dec + "0";
         }
 
-        paint.setColor(Color.BLUE);
-        paint.setTextSize(20);
-        canvas.drawText(time, 10, 20, paint);
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(strokeWidth);
+        canvas.drawLine(0, 0, 0, height, paint);
+
+        if (timeText != null) {
+            paint.setColor(Color.BLUE);
+            paint.setTextSize(20);
+            canvas.drawText(timeText, 10, 20, paint);
+        }
     }
 
 
@@ -88,15 +131,15 @@ public class PcmGraphView extends View {
 
 
     private void drawPcmData(byte[] pcmData) {
-        offscreenCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        offscreenCanvas.clear();
 
         int frames = pcmData.length / 2;
         ByteBuffer buffer = ByteBuffer.wrap(pcmData);
         for (int i = 0; i < frames; i++) {
             int value = buffer.getShort() / 64;
-            offscreenCanvas.drawLine(i, 512, i, 512 - value, offscreenPaint);
+            offscreenCanvas.drawLine(i, 512, i, 512 - value);
         }
 
-        postInvalidate();
+        postInvalidateOnAnimation();
     }
 }
