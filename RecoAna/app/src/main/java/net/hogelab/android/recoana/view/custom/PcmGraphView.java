@@ -1,7 +1,6 @@
 package net.hogelab.android.recoana.view.custom;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +18,8 @@ import java.nio.ByteBuffer;
 public class PcmGraphView extends View {
     private static final String TAG = PcmGraphView.class.getSimpleName();
 
+    private int viewWidth;
+    private int viewHeight;
     private OffscreenCanvas offscreenCanvas;
 
     private int position;
@@ -48,7 +49,7 @@ public class PcmGraphView extends View {
         Log.v(TAG, "onFinishInflate");
 
         // initialize
-        offscreenCanvas = new OffscreenCanvas(480, 1024, Bitmap.Config.ARGB_8888);
+        offscreenCanvas = new OffscreenCanvas(480, 1024);
     }
 
     @Override
@@ -92,6 +93,8 @@ public class PcmGraphView extends View {
         int width = getWidth();
         int height = getHeight();
         Rect destRect = new Rect(0, 0, width, height);
+        Log.v(TAG, "bitmap draw Rect: " + destRect.toShortString());
+
         canvas.drawBitmap(offscreenCanvas.getBitmap(), null, destRect, paint);
 
         float strokeWidth;

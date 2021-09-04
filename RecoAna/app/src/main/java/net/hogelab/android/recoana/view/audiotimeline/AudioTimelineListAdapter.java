@@ -20,12 +20,18 @@ import java.util.List;
 public class AudioTimelineListAdapter extends RecyclerView.Adapter<DataBindingViewHolder> {
     private static final String TAG = AudioTimelineListAdapter.class.getSimpleName();
 
-    protected LayoutInflater inflater;
-    protected AudioTimelineList data;
+    private final LayoutInflater inflater;
+    private AudioTimelineList data;
+    private float density;
 
-    public AudioTimelineListAdapter(Context context, AudioTimelineList data) {
+    private int cellDpSize;
+
+    public AudioTimelineListAdapter(Context context, AudioTimelineList data, float density) {
         this.inflater = LayoutInflater.from(context);
         this.data = data;
+        this.density = density;
+
+        cellDpSize = 8;
     }
 
 
@@ -59,6 +65,14 @@ public class AudioTimelineListAdapter extends RecyclerView.Adapter<DataBindingVi
     }
 
 
+    public void setCellDpSize(int cellDpSize) {
+        if (cellDpSize != this.cellDpSize) {
+            this.cellDpSize = cellDpSize;
+
+            notifyDataSetChanged();
+        }
+    }
+
     public void updateData(AudioTimelineList data) {
         this.data = data;
 
@@ -71,7 +85,9 @@ public class AudioTimelineListAdapter extends RecyclerView.Adapter<DataBindingVi
     }
 
     private void setBinding(ViewDataBinding binding, int position, byte[] audioData) {
+        int pix = (int) (cellDpSize * density);
         ListItemAudioTimelineBinding targetBinding = (ListItemAudioTimelineBinding) binding;
+        targetBinding.pcmGraphView.getLayoutParams().width = pix;
         targetBinding.pcmGraphView.setPcmData(position, audioData);
     }
 }

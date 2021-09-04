@@ -8,12 +8,12 @@
 
     <FrameLayout
         android:id="@+id/timeline_cell"
-        android:layout_width="60px"
-        android:layout_height="1024px">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
         <net.hogelab.android.recoana.view.custom.PcmGraphView
             android:id="@+id/pcm_graph_view"
-            android:layout_width="match_parent"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             />
 

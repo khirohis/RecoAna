@@ -10,19 +10,32 @@ import androidx.annotation.NonNull;
 public class OffscreenCanvas {
     private static final String TAG = PcmGraphView.class.getSimpleName();
 
-    private final int width;
-    private final int height;
-    private final Bitmap bitmap;
-
     private final Paint paint;
-    private final Canvas canvas;
+
+    private int width;
+    private int height;
+    private Bitmap bitmap;
+    private Canvas canvas;
+
+    public OffscreenCanvas(int width, int height) {
+        this(width, height, Bitmap.Config.ARGB_8888);
+    }
 
     public OffscreenCanvas(int width, int height, Bitmap.Config config) {
+        paint = new Paint();
+
+        setup(width, height, config);
+    }
+
+
+    public void setup(int width, int height) {
+        setup(width, height, Bitmap.Config.ARGB_8888);
+    }
+
+    public void setup(int width, int height, Bitmap.Config config) {
         this.width = width;
         this.height = height;
         bitmap = Bitmap.createBitmap(width, height, config);
-
-        paint = new Paint();
         canvas = new Canvas(bitmap);
     }
 

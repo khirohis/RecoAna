@@ -1,10 +1,12 @@
 package net.hogelab.android.recoana.view;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +29,8 @@ public class AnalyzeFragment extends Fragment {
 
     private DataStore dataStore;
     private AudioTimelineList list;
+
+    DisplayMetrics displaymetrics;
     private AudioTimelineListAdapter adapter;
 
     public static Fragment newInstance() {
@@ -54,8 +58,27 @@ public class AnalyzeFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_analyze, container, false);
         binding.setLifecycleOwner(this);
 
-        adapter = new AudioTimelineListAdapter(requireContext(), list);
+        displaymetrics = new DisplayMetrics();
+        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+
+        adapter = new AudioTimelineListAdapter(requireContext(), list, displaymetrics.density);
         binding.audioTimelineList.setAdapter(adapter);
+
+        binding.timelineScaleSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                onTimelineScaleChanged(i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         return binding.getRoot();
     }
@@ -93,12 +116,8 @@ public class AnalyzeFragment extends Fragment {
 
     // UI action handlers
 
-    private void onRecordingControl(View view) {
-    }
-
-    private void onAnalyze(View view) {
-    }
-
-    private void onPreferences(View view) {
+    private void onTimelineScaleChanged(int value) {
+        // 0-9 to 10-100
+        adapter.setCellDpSize((value + 1) * 10);
     }
 }
