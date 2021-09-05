@@ -64,6 +64,7 @@ public class AnalyzeFragment extends Fragment {
         adapter = new AudioTimelineListAdapter(requireContext(), list, displaymetrics.density);
         binding.audioTimelineList.setAdapter(adapter);
 
+        adapter.setCellDpSize((binding.timelineScaleSeekbar.getProgress() + 1) * 10);
         binding.timelineScaleSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override

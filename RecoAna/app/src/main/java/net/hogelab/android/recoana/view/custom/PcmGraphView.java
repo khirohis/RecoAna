@@ -126,6 +126,8 @@ public class PcmGraphView extends View {
 
 
     public void setPcmData(int position, byte[] pcmData) {
+        offscreenCanvas.clear();
+
         this.position = position;
         this.pcmData = pcmData;
 
@@ -134,8 +136,6 @@ public class PcmGraphView extends View {
 
 
     private void drawPcmData(byte[] pcmData) {
-        offscreenCanvas.clear();
-
         int frames = pcmData.length / 2;
         ByteBuffer buffer = ByteBuffer.wrap(pcmData);
         for (int i = 0; i < frames; i++) {
